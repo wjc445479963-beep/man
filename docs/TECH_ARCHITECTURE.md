@@ -2,7 +2,7 @@
 
 ## 阶段一选型
 
-**原生 HTML + CSS + JavaScript ES Modules，SVG/CSS 角色与场景视觉。**
+**原生 HTML + CSS + JavaScript ES Modules，PNG 角色立绘与 CSS 场景视觉。**
 
 目前产品风险在于陪伴体验、关系状态和碎片化对话是否成立，而非大规模实时渲染。因此先用浏览器技术降低 Windows 开发门槛、支持窄屏和 AI 协作。运行不依赖包管理器或外部库，代码可由静态服务器直接提供。
 
@@ -14,7 +14,7 @@ Godot 4 适合后来需要场景编辑器、骨骼动作、引擎工具链和原
 - src/core/affection.js：好感增减与等级判断。
 - src/core/game-state.js：按角色保存关系、消息、选择和剧情旗标；提供事件方法。
 - src/core/save.js：浏览器本地存档读写与异常回退。
-- src/ui/character-stage.js：角色展示适配器。当前加载 SVG 并呈现表情、动作与交互热点；未来可以替换 Three.js 实现。
+- src/ui/character-stage.js：角色展示适配器。当前加载角色立绘并呈现表情反馈、待机动画和交互热点；未来可以替换 Three.js 实现。
 - src/ui/*-view.js：独立页面视图，接收角色和状态数据。
 - src/app/main.js：导航和用户事件编排，不承载角色文本与故事内容。
 

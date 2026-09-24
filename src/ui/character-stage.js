@@ -14,12 +14,12 @@ export class CharacterStage {
     const face = options.face || "idle";
     this.root.innerHTML =
       '<div class="stage-sky">' +
-        '<div class="window-frame"><i></i><b></b><span class="moon"></span></div>' +
+        '<img class="stage-art-backdrop" src="assets/male-01-portrait.png" alt="" aria-hidden="true" />' +
         '<div class="stage-glow"></div>' +
         '<div class="stage-caption"><span>FOG HARBOR</span><span>23:18 · 微潮</span></div>' +
         '<div class="portrait-wrap ' + (options.motion || "") + " " + face + '">' +
           '<div class="portrait-halo"></div>' +
-          '<img class="portrait" src="assets/male-01-portrait.svg" alt="' + character.name + ' 的原创角色立绘" data-interact />' +
+          '<img class="portrait" src="assets/male-01-portrait.png" alt="' + character.name + ' 的角色立绘" data-interact />' +
           '<button class="touch-zone touch-head" data-touch="head" aria-label="轻触头部"><span>头发</span></button>' +
           '<button class="touch-zone touch-chest" data-touch="chest" aria-label="轻触胸口"><span>胸口</span></button>' +
           '<button class="touch-zone touch-hand" data-touch="hand" aria-label="轻触手部"><span>手</span></button>' +
