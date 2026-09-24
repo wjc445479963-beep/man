@@ -1,33 +1,35 @@
-import { getAffectionLevel } from "../core/affection.js?v=0.2.1";
+import { getAffectionLevel } from "../core/affection.js?v=0.3.0";
+import { APP_VERSION } from "../../data/app-version.js?v=0.3.0";
+import { escapeHtml as h } from "./html.js?v=0.3.0";
 
-export function homeView(character, state) {
+export function homeView(character) {
+  const date = new Intl.DateTimeFormat("zh-CN", { month: "long", day: "numeric", weekday: "long" }).format(new Date());
+  return `<section class="companion-page">
+    <header class="companion-header"><div><p class="companion-kicker">雾 港 来 信 <span>／</span> BETWEEN THE TIDES</p><h1>把这一刻，留给彼此。</h1></div><div class="header-right"><span>${date}</span><button class="ambient-toggle" data-action="ambient" aria-pressed="false">♫ 雨声 · 关</button></div></header>
+    <div class="companion-layout">
+      <section class="presence-card" aria-label="与${h(character.name)}相处"><div id="character-stage" class="presence-stage"></div>
+        <div class="presence-top"><span class="presence-tag"><i></i> 此刻，与你同在</span><span>雾港 · 私人休息室</span></div>
+        <div class="presence-title"><span class="presence-chapter">01 / 一盏留给你的灯</span><h2>${h(character.name)}</h2><p id="presence-mood">他抬起眼，注意到了你的到来。</p></div>
+        <div class="camera-tools"><button data-action="stage-guides" aria-pressed="false" title="显示可以触碰的位置">◎ 触碰提示</button><button data-action="camera-close" aria-pressed="false">⌕ 靠近看</button></div>
+      </section>
+      <aside class="companion-sidebar"><div class="relationship-strip"><span>你们的关系 <b id="relationship-label"></b></span><span id="relationship-score"></span><div class="relationship-track"><i id="relationship-fill"></i></div></div>
+        <section class="encounter-card" id="encounter-panel" aria-label="面对面交谈"></section>
+        <div class="touch-actions" aria-label="与他互动"><button data-encounter="hair"><span>〰</span>理理头发</button><button data-encounter="hand"><span>⌁</span>牵他的手</button><button data-encounter="lapel"><span>⋈</span>整理衣领</button></div>
+        <details class="memory-book"><summary>相处手记 <span id="memory-count">0 段记忆</span></summary><div id="memory-list"></div></details>
+        <div class="companion-links"><button data-route="messages"><span>✉</span><div>他的消息<small id="message-status">私人通讯</small></div><i class="unread-dot"></i><b>↗</b></button><button data-route="story"><span>▤</span><div>一起去看看<small id="story-status">潮汐档案</small></div><b>↗</b></button></div>
+      </aside>
+    </div><footer class="companion-footer"><span>不必一直说话，也不必每次都有理由。</span><span>雾港来信 · v${APP_VERSION}</span></footer>
+  </section>`;
+}
+
+export function updateHomeStatus(character, state) {
   const level = getAffectionLevel(character, state.affection);
-  const range = Math.max(1, level.next - level.floor);
-  const progress = level.index === character.affinity.labels.length - 1
-    ? 100
-    : Math.round(((state.affection - level.floor) / range) * 100);
-  const sceneReady = state.affection >= 10;
-  return '<section class="page home-page">' +
-    '<header class="topbar"><div><div class="eyebrow">FOG HARBOR · 09:24 PM</div><div class="greeting-line">夜色正好，<span>你回来了。</span></div></div>' +
-    '<button class="icon-button weather-pill" data-action="random-action"><span class="weather-icon">◌</span><span>雾 · 16°</span></button></header>' +
-    '<div class="home-layout"><section class="hero-panel">' +
-      '<div class="hero-meta"><span class="live-pill"><i></i> 在线</span><span>调查局 · 休息室</span></div>' +
-      '<div id="character-stage" class="character-stage"></div>' +
-      '<div class="hero-footer"><div><div class="hero-name">' + character.name + '<span class="name-mark">王</span></div><div class="hero-role">' + character.callSign + '</div></div>' +
-      '<button class="round-action" data-action="random-action" aria-label="看看他的动作">↻</button></div>' +
-    '</section>' +
-    '<aside class="side-stack"><section class="affection-card panel-card"><div class="card-top"><span>关系进度</span><span class="level-tag">' + level.label + '</span></div>' +
-      '<div class="affection-number">' + String(state.affection).padStart(2, "0") + '<small> / 100</small></div>' +
-      '<div class="progress-track"><i style="width:' + progress + '%"></i></div>' +
-      '<div class="affection-foot"><span>你们的默契正在增加</span><span>' + (level.index === 3 ? "已抵达" : "下一级 " + level.next) + '</span></div>' +
-      '<div class="divider"></div><div class="relationship-note">“他开始把决定留给你。”</div></section>' +
-      '<section class="message-card panel-card"><div class="card-top"><span>他的消息</span><button class="text-link" data-route="messages">查看全部 <span>↗</span></button></div>' +
-        '<div class="message-preview"><span class="message-avatar">王</span><div><strong>王彦祖</strong><p>' + (state.sceneCompleted ? "下次雾散之前，陪我去潮汐站走走。" : "我刚结束外勤。你那边下雨了吗？") + '</p></div><i class="message-unread"></i></div>' +
-        '<button class="wide-link" data-route="messages">打开通讯 <span>→</span></button></section>' +
-      '<section class="story-card"><div class="story-card-copy"><span class="eyebrow">本日档案 · 01</span><h2>潮汐档案</h2><p>' + (state.sceneCompleted ? "已归档 · 新消息待回复" : "旧气象站的记录出现一段空白") + '</p>' +
-        '<button class="story-open" data-route="story">' + (state.sceneCompleted ? "回看记录" : sceneReady ? "开始调查" : "关系熟悉后解锁") + ' <span>↗</span></button></div>' +
-        '<div class="story-emblem"><span>潮</span><i></i><b></b></div>' +
-      '</section></aside></div>' +
-    '<div class="home-bottom"><span>与你相处的第 ' + (1 + state.replies.length + (state.sceneCompleted ? 1 : 0)) + ' 次记录</span><button data-action="dialogue">听他说说 <span>→</span></button></div>' +
-  '</section>';
+  const label = document.querySelector("#relationship-label"); if (!label) return;
+  label.textContent = level.label;
+  document.querySelector("#relationship-score").textContent = `${state.affection} / 100`;
+  document.querySelector("#relationship-fill").style.width = `${state.affection}%`;
+  document.querySelector("#story-status").textContent = state.sceneCompleted ? "我们的共同记忆" : state.affection >= 10 ? "今夜，可以出发了" : "好感 10 · 解锁一段同行";
+  document.querySelector("#message-status").textContent = state.inbox.some(id => !state.readMessages.includes(id)) ? "有一封未读来信" : "聊天记录都在这里";
+  document.querySelector("#memory-count").textContent = `${state.journal.length} 段记忆`;
+  document.querySelector("#memory-list").innerHTML = state.journal.length ? [...state.journal].reverse().map(entry => `<article><time>${h(entry.date)}</time><strong>${h(entry.title)}</strong><p>${h(entry.detail)}</p></article>`).join("") : '<p class="empty-memory">一段聊完的话，一次认真的靠近，都会被记在这里。</p>';
 }

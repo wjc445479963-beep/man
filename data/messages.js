@@ -1,5 +1,13 @@
 export const messages = [
   {
+    id: "msg_after_evening", from: "王彦祖", time: "见面之后",
+    text: "刚才忘了说。你来这里，不用每次都带着一个理由。想见面，就是理由。",
+    replies: [
+      { text: "那我下次直接敲门了。", response: "好。最后一盏灯，我会记得留给你。", affection: 3 },
+      { text: "今天谢谢你听我说。", response: "不必谢。换作我需要的时候，你也在就好。", affection: 3 }
+    ]
+  },
+  {
     id: "msg_first",
     from: "王彦祖",
     time: "20:16",

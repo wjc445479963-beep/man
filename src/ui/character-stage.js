@@ -1,34 +1,45 @@
-const emotes = {
-  idle: "目光落在窗外，像是在听很远的潮声。",
-  attentive: "他的视线停在你身上，眉心微微松开。",
-  amused: "唇边浮起一点笑意，很快又被他藏好。",
-  serious: "他收敛神色，安静地等你把话说完。"
-};
+import { PortraitRenderer } from "./portrait-renderer.js?v=0.3.0";
+import { escapeHtml } from "./html.js?v=0.3.0";
 
 export class CharacterStage {
-  constructor(root) {
-    this.root = root;
+  constructor(root, onTouch) { this.root = root; this.onTouch = onTouch; }
+  render(character) {
+    this.media = character.presentation;
+    this.root.innerHTML = `<div class="presence-background" style="background-image:url('${this.media.portrait}')"></div>
+      <div class="portrait-plane"><img class="portrait-fallback" src="${this.media.portrait}" alt="${escapeHtml(character.name)}，坐在窗边等你" draggable="false">
+      <canvas class="living-portrait" aria-hidden="true"></canvas><div class="portrait-guides" aria-hidden="true">${this.media.zones.map(zone => `<span style="left:${zone.x * 100}%;top:${zone.y * 100}%">${zone.label}</span>`).join("")}</div></div>
+      <div class="presence-vignette"></div><div class="rain-light" aria-hidden="true"></div>
+      <span class="touch-ripple" aria-hidden="true"></span>`;
+    this.plane = this.root.querySelector(".portrait-plane");
+    this.renderer = new PortraitRenderer(this.root.querySelector("canvas"), this.media);
+    this.abort = new AbortController();
+    const options = { signal: this.abort.signal };
+    this.root.addEventListener("pointermove", event => {
+      if (event.pointerType === "touch") return;
+      const rect = this.plane.getBoundingClientRect();
+      this.renderer.lookAt((event.clientX - rect.left) / rect.width * 2 - 1, (event.clientY - rect.top) / rect.height * 2 - 1);
+    }, options);
+    this.root.addEventListener("pointerleave", () => this.renderer.lookAt(0, 0), options);
+    this.root.addEventListener("pointerdown", event => { this.pointerStart = { x: event.clientX, y: event.clientY }; }, options);
+    this.root.addEventListener("pointerup", event => {
+      if (!this.pointerStart || Math.hypot(event.clientX - this.pointerStart.x, event.clientY - this.pointerStart.y) > 12) return;
+      const zone = this.hitTest(event.clientX, event.clientY); this.pointerStart = null;
+      if (!zone) return;
+      const rect = this.root.getBoundingClientRect(), ripple = this.root.querySelector(".touch-ripple");
+      ripple.style.left = `${event.clientX - rect.left}px`; ripple.style.top = `${event.clientY - rect.top}px`;
+      ripple.getAnimations().forEach(animation => animation.cancel());
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) ripple.animate([{ opacity: .9, transform: "translate(-50%,-50%) scale(.3)" }, { opacity: 0, transform: "translate(-50%,-50%) scale(2.5)" }], { duration: 700 });
+      this.onTouch?.(zone.id);
+    }, options);
+    this.root.addEventListener("pointercancel", () => { this.pointerStart = null; }, options);
   }
-
-  render(character, state, options = {}) {
-    const face = options.face || "idle";
-    this.root.innerHTML =
-      '<div class="stage-sky">' +
-        '<img class="stage-art-backdrop" src="assets/male-01-portrait.png?v=0.2.1" alt="" aria-hidden="true" />' +
-        '<div class="stage-glow"></div>' +
-        '<div class="stage-caption"><span>FOG HARBOR</span><span>23:18 · 微潮</span></div>' +
-        '<div class="portrait-wrap ' + (options.motion || "") + " " + face + '">' +
-          '<div class="portrait-halo"></div>' +
-          '<img class="portrait" src="assets/male-01-portrait.png?v=0.2.1" alt="' + character.name + ' 的角色立绘" data-interact />' +
-          '<button class="touch-zone touch-head" data-touch="head" aria-label="轻触头部"><span>头发</span></button>' +
-          '<button class="touch-zone touch-chest" data-touch="chest" aria-label="轻触胸口"><span>胸口</span></button>' +
-          '<button class="touch-zone touch-hand" data-touch="hand" aria-label="轻触手部"><span>手</span></button>' +
-        '</div>' +
-        '<div class="stage-dialogue" aria-live="polite">' +
-          '<span class="dialogue-mark">“</span><p>' + (options.line || character.greeting) + '</p>' +
-          '<small>' + (emotes[face] || emotes.idle) + '</small>' +
-        '</div>' +
-        '<div class="stage-hint"><span class="pulse-ring"></span> 点击他，看看会发生什么</div>' +
-      '</div>';
+  hitTest(clientX, clientY) {
+    const rect = this.plane.getBoundingClientRect();
+    const x = (clientX - rect.left) / rect.width, y = (clientY - rect.top) / rect.height;
+    return this.media.zones.find(zone => ((x - zone.x) / zone.rx) ** 2 + ((y - zone.y) / zone.ry) ** 2 <= 1);
   }
+  react(face, gesture) { this.renderer?.setExpression(face, gesture); }
+  toggleGuides() { return this.root.classList.toggle("show-guides"); }
+  toggleClose() { return this.root.classList.toggle("camera-close"); }
+  dispose() { this.abort?.abort(); this.renderer?.dispose(); }
 }
