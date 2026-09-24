@@ -33,3 +33,7 @@ UI 用户操作 → 核心状态动作 → 按 male_01 更新本机存档 → �
 ## 运行与调试
 
 在 Windows PowerShell 中运行根目录的 run-local.ps1，再用浏览器打开脚本显示的本机地址。数据与文案使用原生模块，避免 file:// 的 ES Module 跨域限制。该服务器只绑定 127.0.0.1。浏览器存档键为 fog-harbor-save-v1。
+
+## GitHub Pages 缓存更新
+
+项目没有注册 Service Worker，因此不会被旧的离线缓存长期拦住。入口 HTML 使用重新验证提示；HTML、CSS、每个 ES Module 导入和角色立绘 URL 都带同一发布版本查询参数。发布新版本时，先更新 changelog，再运行 `./scripts/update-cache-version.ps1 -Version x.y.z`，检查 `index.html` 和 JS 导入的版本一致后提交。侧栏底部会显示当前版本，方便确认网页加载的是哪次发布。浏览器/CDN 对 HTML 元数据的处理仍受托管服务影响；若 Pages 尚未发布，版本号和缓存参数都不会生效。

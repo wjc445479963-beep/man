@@ -1,7 +1,7 @@
 export const characters = {
   male_01: {
     id: "male_01",
-    name: "沈砚舟",
+    name: "王彦祖",
     callSign: "雾港档案 · 特别顾问",
     age: 30,
     height: "189 cm",

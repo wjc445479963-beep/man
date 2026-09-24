@@ -1,9 +1,9 @@
-import { getAffectionLevel } from "../core/affection.js";
+import { getAffectionLevel } from "../core/affection.js?v=0.2.1";
 
 export function profileView(character, state) {
   const level = getAffectionLevel(character, state.affection);
   return '<section class="page subpage profile-page"><header class="subpage-header"><div><div class="eyebrow">PERSONNEL FILE · 01</div><h1>角色档案</h1><p>雾港异常气象调查局 · 内部资料</p></div><span class="secure-tag">◈ 限本人查看</span></header>' +
-    '<div class="profile-layout"><section class="profile-portrait-card"><div class="profile-art-glow"></div><img src="assets/male-01-portrait.png" alt="' + character.name + ' 的档案立绘" /><div class="profile-index">MALE_01 <span>·</span> ACTIVE</div></section>' +
+    '<div class="profile-layout"><section class="profile-portrait-card"><div class="profile-art-glow"></div><img src="assets/male-01-portrait.png?v=0.2.1" alt="' + character.name + ' 的档案立绘" /><div class="profile-index">MALE_01 <span>·</span> ACTIVE</div></section>' +
       '<section class="profile-copy panel-card"><div class="profile-name-row"><div><div class="eyebrow">' + character.callSign + '</div><h2>' + character.name + '</h2></div><span class="level-tag">' + level.label + '</span></div>' +
         '<p class="profile-intro">' + character.firstImpression + '</p>' +
         '<div class="profile-facts"><div><small>年龄</small><b>' + character.age + ' 岁</b></div><div><small>身高</small><b>' + character.height + '</b></div><div><small>身份</small><b>' + character.role + '</b></div></div>' +

@@ -1,14 +1,14 @@
-import { characters } from "../../data/characters.js";
-import { dialogueSets } from "../../data/dialogues.js";
-import { messages } from "../../data/messages.js";
-import { scenes } from "../../data/scenes.js";
-import { gainAffection, stateFor, subscribe, markMessageRead, replyToMessage, startScene, advanceScene, completeScene, sendMessage, dismissLevel, resetCharacter, playerHasFlag } from "../core/game-state.js";
-import { getAffectionLevel } from "../core/affection.js";
-import { CharacterStage } from "../ui/character-stage.js";
-import { homeView } from "../ui/home-view.js";
-import { messagesView } from "../ui/messages-view.js";
-import { profileView } from "../ui/profile-view.js";
-import { sceneView, storyView } from "../ui/story-view.js";
+import { characters } from "../../data/characters.js?v=0.2.1";
+import { dialogueSets } from "../../data/dialogues.js?v=0.2.1";
+import { messages } from "../../data/messages.js?v=0.2.1";
+import { scenes } from "../../data/scenes.js?v=0.2.1";
+import { gainAffection, stateFor, subscribe, markMessageRead, replyToMessage, startScene, advanceScene, completeScene, sendMessage, dismissLevel, resetCharacter, playerHasFlag } from "../core/game-state.js?v=0.2.1";
+import { getAffectionLevel } from "../core/affection.js?v=0.2.1";
+import { CharacterStage } from "../ui/character-stage.js?v=0.2.1";
+import { homeView } from "../ui/home-view.js?v=0.2.1";
+import { messagesView } from "../ui/messages-view.js?v=0.2.1";
+import { profileView } from "../ui/profile-view.js?v=0.2.1";
+import { sceneView, storyView } from "../ui/story-view.js?v=0.2.1";
 
 const activeCharacterId = "male_01";
 const character = characters[activeCharacterId];
@@ -19,7 +19,7 @@ let toastTimer;
 
 if (!stateFor(activeCharacterId).inbox.length) {
   sendMessage(activeCharacterId, "msg_first");
-  window.setTimeout(() => toast("沈砚舟发来一条消息"), 850);
+  window.setTimeout(() => toast("王彦祖发来一条消息"), 850);
 }
 
 function toast(message) {
@@ -142,7 +142,7 @@ document.addEventListener("click", (event) => {
       viewState.line = dialogueSets.conditional.find((item) => item.id === "scene_complete").text;
       viewState.face = "serious";
       navigate("story");
-      toast("调查完成 · 收到沈砚舟的新消息");
+      toast("调查完成 · 收到王彦祖的新消息");
       break;
     case "leave-scene":
       navigate("story");
@@ -151,7 +151,7 @@ document.addEventListener("click", (event) => {
       toast("再多聊一会儿，档案就会向你开放。");
       break;
     case "reset-save":
-      if (window.confirm("要重置沈砚舟的本地关系进度和剧情记录吗？")) {
+      if (window.confirm("要重置王彦祖的本地关系进度和剧情记录吗？")) {
         resetCharacter(activeCharacterId);
         viewState.line = character.greeting;
         viewState.face = "idle";

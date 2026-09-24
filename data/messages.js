@@ -1,7 +1,7 @@
 export const messages = [
   {
     id: "msg_first",
-    from: "沈砚舟",
+    from: "王彦祖",
     time: "20:16",
     text: "我刚结束外勤。你那边下雨了吗？",
     replies: [
@@ -11,7 +11,7 @@ export const messages = [
   },
   {
     id: "msg_after_scene",
-    from: "沈砚舟",
+    from: "王彦祖",
     time: "22:43",
     text: "录音已经归档。还有一件事：下次雾散之前，陪我去潮汐站走走。",
     replies: [

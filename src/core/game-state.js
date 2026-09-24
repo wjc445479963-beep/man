@@ -1,6 +1,6 @@
-import { characters } from "../../data/characters.js";
-import { addAffection } from "./affection.js";
-import { loadSave, saveGame } from "./save.js";
+import { characters } from "../../data/characters.js?v=0.2.1";
+import { addAffection } from "./affection.js?v=0.2.1";
+import { loadSave, saveGame } from "./save.js?v=0.2.1";
 
 const store = loadSave();
 const listeners = new Set();
