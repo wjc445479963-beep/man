@@ -33,8 +33,13 @@ function randomItem(items) {
 }
 
 function syncNavigation() {
+  const state = stateFor(activeCharacterId);
+  const latestMessage = state.inbox.at(-1);
+  const unread = Boolean(latestMessage && !state.readMessages.includes(latestMessage));
   document.querySelectorAll("[data-route]").forEach((button) => {
     button.classList.toggle("active", button.dataset.route === viewState.route || (viewState.route === "scene" && button.dataset.route === "story"));
+    const dot = button.querySelector(".unread-dot");
+    if (dot) dot.style.display = unread ? "block" : "none";
   });
 }
 
