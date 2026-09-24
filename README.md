@@ -15,7 +15,7 @@ Godot 4 是后续需要场景编辑器、骨骼动画、原生打包或大量实
 
 ## 运行
 
-在仓库目录启动一个本地静态文件服务器，然后用浏览器打开本机地址。Python 环境可运行 python -m http.server 8000，访问 http://localhost:8000。也可用 VS Code Live Server。无需 npm install。
+在 Windows PowerShell 中进入仓库目录，运行 .\run-local.ps1，然后用浏览器打开 http://127.0.0.1:8000。按 Ctrl+C 停止。脚本只在本机回环地址提供项目静态文件，不需要安装 Python、Godot 或 npm 包。
 
 ## 当前可玩内容
 

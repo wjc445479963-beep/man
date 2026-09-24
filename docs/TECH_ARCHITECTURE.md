@@ -32,4 +32,4 @@ UI 用户操作 → 核心状态动作 → 按 male_01 更新本机存档 → �
 
 ## 运行与调试
 
-使用本地静态服务器打开仓库根目录的 index.html。数据与文案使用原生模块，避免 file:// 的 ES Module 跨域限制。浏览器存档键为 fog-harbor-save-v1。
+在 Windows PowerShell 中运行根目录的 run-local.ps1，再用浏览器打开脚本显示的本机地址。数据与文案使用原生模块，避免 file:// 的 ES Module 跨域限制。该服务器只绑定 127.0.0.1。浏览器存档键为 fog-harbor-save-v1。
